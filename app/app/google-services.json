@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "746897717734",
+    "project_id": "mobinch-effd0",
+    "storage_bucket": "mobinch-effd0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746897717734:android:aeaad4fb8430a2a489fe27",
+        "android_client_info": {
+          "package_name": "com.dag.mobinchapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpfCqPmGrQMA5U7yIrv2ol6sYzPpM-eZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MobinchApp</string>
+    <string name="alert_dialog_user_input">Please write here …</string>
+    <string name="home_destination_title">Home</string>
+</resources>
