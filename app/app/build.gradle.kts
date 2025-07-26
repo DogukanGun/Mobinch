@@ -28,7 +28,7 @@ android {
         // Load local.properties file if it exists
 
         // First, define a Properties object to hold the keys if we find them.
-        val localProperties = java.util.Properties()
+        val localProperties = Properties()
         // Define the path to the local.properties file in the project's root directory.
         val localPropertiesFile = rootProject.file("local.properties")
 
