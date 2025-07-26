@@ -25,28 +25,10 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        // Load local.properties file if it exists
-
-        // First, define a Properties object to hold the keys if we find them.
-        val localProperties = Properties()
-        // Define the path to the local.properties file in the project's root directory.
-        val localPropertiesFile = rootProject.file("local.properties")
-
-        // *** This is the most important part for CI/CD ***
-        // Only try to load the file if it actually exists.
-        // In GitHub Actions, it won't exist, so this block will be skipped.
-        if (localPropertiesFile.exists()) {
-            localProperties.load(FileInputStream(localPropertiesFile))
-        }
-
-        // Now, read the keys.
-        // It will first try to get the key from a system environment variable (for GitHub Actions).
-        // If the environment variable is not found (i.e., you're on your local machine),
-        // it will fall back to getting the key from the local.properties object.
-        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
+        val oneinchKey = System.getenv("ONEINCH_KEY")
         buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
 
-        val openAIKey = System.getenv("OPEN_AI_KEY") ?: localProperties.getProperty("open_ai_key")
+        val openAIKey = System.getenv("OPEN_AI_KEY")
         buildConfigField("String", "openAIKey", "\"$openAIKey\"")
     }
 
