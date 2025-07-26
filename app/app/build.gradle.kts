@@ -134,6 +134,6 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlinx.metadata.jvm)
 
-    // Add this to ensure compatibility
-    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
+    implementation(libs.metamask.android.sdk)
+
 }

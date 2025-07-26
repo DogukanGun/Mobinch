@@ -25,18 +25,17 @@ class SplashVM @Inject constructor(
     }
 
     companion object {
-        private const val PHANTOM_PACKAGE_NAME = "app.phantom"
-        private const val SOLFLARE_PACKAGE_NAME = "com.solflare.mobile"
+        private const val METAMASK_PACKAGE_NAME = "io.metamask"
         private const val SPLASH_DELAY = 3000L // 3 seconds delay
     }
 
     private fun checkWallets(){
-        if (!isPhantomWalletInstalled() && !isSolflareWalletInstalled()){
+        if (!isMetamaskWalletInstalled()){
             viewModelScope.launch {
                 alertDialogManager.showAlert(
                     AlertDialogModel(
                         title = "Wallet Required",
-                        message = "To use NexWallet, you need either Phantom or Solflare wallet installed on your device. Please install one of these wallets from your app store to continue.",
+                        message = "To use NexWallet, you need Metamask wallet installed on your device. Please install one of these wallets from your app store to continue.",
                         textInput = false,
                         positiveButton = AlertDialogButton(
                             text = "Got it",
@@ -60,12 +59,8 @@ class SplashVM @Inject constructor(
         activityHolder.getActivity()?.finish()
     }
 
-    private fun isPhantomWalletInstalled(): Boolean {
-        return isPackageInstalled(PHANTOM_PACKAGE_NAME)
-    }
-
-    private fun isSolflareWalletInstalled(): Boolean {
-        return isPackageInstalled(SOLFLARE_PACKAGE_NAME)
+    private fun isMetamaskWalletInstalled(): Boolean {
+        return isPackageInstalled(METAMASK_PACKAGE_NAME)
     }
 
     private fun isPackageInstalled(packageName: String): Boolean {
