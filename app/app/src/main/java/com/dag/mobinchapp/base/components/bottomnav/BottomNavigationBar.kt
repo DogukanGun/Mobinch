@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.dag.mobinchapp.base.navigation.Destination
 import androidx.compose.animation.core.*
 import androidx.compose.animation.*
+import androidx.compose.animation.togetherWith
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -152,12 +153,14 @@ fun BottomNavigationBar(
             AnimatedContent(
                 targetState = showMessage,
                 transitionSpec = {
-                    fadeIn(animationSpec = tween(300)) + slideInVertically(
+                    (fadeIn(animationSpec = tween(300)) + slideInVertically(
                         initialOffsetY = { it },
                         animationSpec = tween(300)
-                    ) with fadeOut(animationSpec = tween(300)) + slideOutVertically(
-                        targetOffsetY = { -it },
-                        animationSpec = tween(300)
+                    )).togetherWith(
+                        fadeOut(animationSpec = tween(300)) + slideOutVertically(
+                                        targetOffsetY = { -it },
+                                        animationSpec = tween(300)
+                                    )
                     )
                 }
             ) { isShowingMessage ->

@@ -2,6 +2,7 @@ package com.dag.mobinchapp.base.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,7 +16,7 @@ fun BackNavigationBar(
     Column {
         IconButton(onClick = backButtonClick) {
             Icon(
-                Icons.Filled.ArrowBack,
+                Icons.AutoMirrored.Filled.ArrowBack,
                 "Back"
             )
         }
