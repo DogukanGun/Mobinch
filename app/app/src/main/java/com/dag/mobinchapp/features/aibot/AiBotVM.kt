@@ -1,17 +1,22 @@
 package com.dag.mobinchapp.features.aibot
 
 import androidx.lifecycle.viewModelScope
+import com.dag.mobinchapp.BuildConfig
+import com.dag.one_inch.Agent
 import com.dag.mobinchapp.base.BaseVM
 import com.dag.mobinchapp.base.components.bottomnav.BottomNavMessageManager
+import com.dag.mobinchapp.base.helper.WalletManagement
 import com.dag.mobinchapp.base.scroll.ScrollStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import io.metamask.androidsdk.Result
 
 @HiltViewModel
 class AiBotVM @Inject constructor(
     private val scrollManager: ScrollStateManager,
-    private val bottomNavManager: BottomNavMessageManager
+    private val bottomNavManager: BottomNavMessageManager,
+    private val walletManagementImpl: WalletManagement
 ): BaseVM<AiBotVS>(AiBotVS.Loading) {
 
     init {
@@ -40,10 +45,26 @@ class AiBotVM @Inject constructor(
 
 
     fun connectWallet() {
-        throw NotImplementedError()
+        val currentState = _viewState.value
+        walletManagementImpl.connect {
+            when(it) {
+                is Result.Success -> {
+                    _viewState.value = (currentState as AiBotVS.Success).copy(
+                        isWalletConnected = true
+                    )
+                }
+                is Result.Error -> {
+                    viewModelScope.launch {
+                        bottomNavManager.showMessage("Wallet Connection Error")
+                    }
+                }
+            }
+        }
     }
 
     fun sendMessage(content: String) {
+        val agent = Agent(BuildConfig.open_ai_key, BuildConfig.oneinch_key)
+        agent.ask(content,"")
         throw NotImplementedError()
     }
 

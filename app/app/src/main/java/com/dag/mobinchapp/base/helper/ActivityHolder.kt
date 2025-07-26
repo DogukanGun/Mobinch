@@ -1,4 +1,4 @@
-package com.dag.mobinchapp.base
+package com.dag.mobinchapp.base.helper
 
 import android.app.Activity
 import java.lang.ref.WeakReference

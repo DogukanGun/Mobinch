@@ -29,8 +29,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -54,14 +57,73 @@ import androidx.compose.ui.window.Dialog
 import com.dag.mobinchapp.ui.theme.primaryText
 import com.dag.mobinchapp.ui.theme.secondaryText
 import com.dag.mobinchapp.R
+import androidx.compose.material3.Divider
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
+
+@Composable
+internal fun MobinchAgentViewWithDrawer(
+    state: AiBotVS.Success,
+    onMessageSend: (String) -> Unit,
+    onActionExecute: (AiBotVS.SuggestedAction) -> Unit,
+    onHeaderClick: () -> Unit
+) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(300.dp)
+            ) {
+                Text(
+                    text = "Message History",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = primaryText
+                    ),
+                    modifier = Modifier.padding(16.dp)
+                )
+                
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.chatMessages.size) { index ->
+                        val message = state.chatMessages[index]
+                        ChatMessageItem(message = message)
+                        Divider(color = Color(0xFF2D2D3F), thickness = 1.dp)
+                    }
+                }
+            }
+        },
+        content = {
+            MobinchAgentView(
+                state = state,
+                onMessageSend = onMessageSend,
+                onActionExecute = onActionExecute,
+                onHeaderClick = onHeaderClick,
+                onHistoryClick = { 
+                    scope.launch { 
+                        if (drawerState.isClosed) drawerState.open() 
+                        else drawerState.close() 
+                    }
+                }
+            )
+        }
+    )
+}
 
 @Composable
 internal fun MobinchAgentView(
     state: AiBotVS.Success,
     onMessageSend: (String) -> Unit,
     onActionExecute: (AiBotVS.SuggestedAction) -> Unit,
-    onHeaderClick: () -> Unit
+    onHeaderClick: () -> Unit,
+    onHistoryClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -72,7 +134,8 @@ internal fun MobinchAgentView(
         AnimatedHeader(
             state = state,
             onHeaderClick = onHeaderClick,
-            onActionExecute = onActionExecute
+            onActionExecute = onActionExecute,
+            onHistoryClick = onHistoryClick
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -157,7 +220,8 @@ private fun SuggestedActions(
 private fun AnimatedHeader(
     state: AiBotVS.Success,
     onHeaderClick: () -> Unit,
-    onActionExecute: (AiBotVS.SuggestedAction) -> Unit
+    onActionExecute: (AiBotVS.SuggestedAction) -> Unit,
+    onHistoryClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -180,14 +244,24 @@ private fun AnimatedHeader(
                     color = primaryText
                 )
 
-                Image(
-                    painter = painterResource(R.drawable._inch_logo),
-                    contentDescription = "1inch Logo",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Fit
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onHistoryClick) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_history_24), // You'll need to add this drawable
+                            contentDescription = "Message History",
+                            tint = primaryText
+                        )
+                    }
+
+                    Image(
+                        painter = painterResource(R.drawable._inch_logo),
+                        contentDescription = "1inch Logo",
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Fit
+                    )
+                }
             }
 
             AnimatedVisibility(

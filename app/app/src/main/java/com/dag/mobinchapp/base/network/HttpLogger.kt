@@ -1,7 +1,7 @@
 package com.dag.mobinchapp.base.network
 
 import android.util.Log
-import com.dag.mobinchapp.base.AlertDialogManager
+import com.dag.mobinchapp.base.helper.AlertDialogManager
 import com.dag.mobinchapp.base.extensions.tryCatch
 import okhttp3.HttpUrl
 import okhttp3.Interceptor

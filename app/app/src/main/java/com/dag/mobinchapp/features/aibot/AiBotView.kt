@@ -29,7 +29,7 @@ fun AiBotScreen(
             is AiBotVS.Success -> {
                 val successState = state as AiBotVS.Success
 
-                MobinchAgentView(
+                MobinchAgentViewWithDrawer(
                     state = successState,
                     onMessageSend = { viewModel.sendMessage(it) },
                     onActionExecute = { viewModel.executeAction(it) },

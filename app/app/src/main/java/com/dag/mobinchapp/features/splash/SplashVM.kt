@@ -2,8 +2,8 @@ package com.dag.mobinchapp.features.splash
 
 import android.content.pm.PackageManager
 import androidx.lifecycle.viewModelScope
-import com.dag.mobinchapp.base.ActivityHolder
-import com.dag.mobinchapp.base.AlertDialogManager
+import com.dag.mobinchapp.base.helper.ActivityHolder
+import com.dag.mobinchapp.base.helper.AlertDialogManager
 import com.dag.mobinchapp.base.BaseVM
 import com.dag.mobinchapp.data.AlertDialogButton
 import com.dag.mobinchapp.data.AlertDialogButtonType

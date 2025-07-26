@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.lifecycleScope
-import com.dag.mobinchapp.base.ActivityHolder
-import com.dag.mobinchapp.base.AlertDialogManager
+import com.dag.mobinchapp.base.helper.ActivityHolder
+import com.dag.mobinchapp.base.helper.AlertDialogManager
 import com.dag.mobinchapp.base.components.CustomAlertDialog
 import com.dag.mobinchapp.base.components.bottomnav.BottomNavMessageManager
 import com.dag.mobinchapp.base.components.bottomnav.BottomNavigationBar

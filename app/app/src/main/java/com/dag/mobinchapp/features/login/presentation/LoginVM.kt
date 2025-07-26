@@ -3,7 +3,7 @@ package com.dag.mobinchapp.features.login.presentation
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dag.mobinchapp.BuildConfig
-import com.dag.mobinchapp.base.ActivityHolder
+import com.dag.mobinchapp.base.helper.ActivityHolder
 import com.dag.mobinchapp.base.BaseVM
 import com.dag.mobinchapp.base.Logger
 import com.dag.mobinchapp.data.model.User
