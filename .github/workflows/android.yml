@@ -26,6 +26,9 @@ jobs:
 
       - name: Build with Gradle
         working-directory: app
+        env:
+          ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
+          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
         run: ./gradlew assembleRelease
 
       - name: Upload APK (only on prod)
