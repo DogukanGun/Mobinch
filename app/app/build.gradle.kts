@@ -36,7 +36,7 @@ android {
         // Only try to load the file if it actually exists.
         // In GitHub Actions, it won't exist, so this block will be skipped.
         if (localPropertiesFile.exists()) {
-            localProperties.load(java.io.FileInputStream(localPropertiesFile))
+            localProperties.load(FileInputStream(localPropertiesFile))
         }
 
         // Now, read the keys.
