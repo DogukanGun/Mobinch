@@ -26,19 +26,28 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Load local.properties file if it exists
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(FileInputStream(localPropertiesFile))
-        }
-        // Read the oneinch_key. Prioritize the environment variable from GitHub Actions.
-        // The name in getenv() MUST match the name in the YAML file's `env` block.
-        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
-        buildConfigField("String", "oneinch_key", "\"$oneinchKey\"")
 
-        // Read the open_ai_key. Prioritize the environment variable.
+        // First, define a Properties object to hold the keys if we find them.
+        val localProperties = java.util.Properties()
+        // Define the path to the local.properties file in the project's root directory.
+        val localPropertiesFile = rootProject.file("local.properties")
+
+        // *** This is the most important part for CI/CD ***
+        // Only try to load the file if it actually exists.
+        // In GitHub Actions, it won't exist, so this block will be skipped.
+        if (localPropertiesFile.exists()) {
+            localProperties.load(java.io.FileInputStream(localPropertiesFile))
+        }
+
+        // Now, read the keys.
+        // It will first try to get the key from a system environment variable (for GitHub Actions).
+        // If the environment variable is not found (i.e., you're on your local machine),
+        // it will fall back to getting the key from the local.properties object.
+        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
+        buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
+
         val openAIKey = System.getenv("OPEN_AI_KEY") ?: localProperties.getProperty("open_ai_key")
-        buildConfigField("String", "open_ai_key", "\"$openAIKey\"")
+        buildConfigField("String", "openAIKey", "\"$openAIKey\"")
     }
 
     buildTypes {
