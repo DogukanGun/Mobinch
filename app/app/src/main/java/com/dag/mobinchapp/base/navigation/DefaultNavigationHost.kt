@@ -8,6 +8,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.dag.mobinchapp.base.extensions.ObserveAsEvents
+import com.dag.mobinchapp.features.aibot.AiBotScreen
 import com.dag.mobinchapp.features.login.presentation.LoginView
 import com.dag.mobinchapp.features.splash.SplashView
 import com.dag.mobinchapp.features.home.presentation.HomeView
@@ -55,6 +56,10 @@ fun DefaultNavigationHost(
                 HomeView(
                     navController = navController
                 )
+            }
+
+            composableWithAnimations<Destination.AIView> {
+                AiBotScreen()
             }
 
         }

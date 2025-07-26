@@ -13,9 +13,6 @@ sealed interface Destination {
     data object HomeScreen: Destination
 
     @Serializable
-    data object SolanaChat: Destination
-
-    @Serializable
     data object AIView: Destination
 
     companion object {
