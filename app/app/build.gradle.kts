@@ -26,7 +26,7 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         val oneInchKey: String? = project.findProperty("ONEINCH_KEY") as String?
-        buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
+        buildConfigField("String", "oneinchKey", "\"$oneInchKey\"")
         // Read the open_ai_key. Prioritize the environment variable.
         val openAIKey = project.findProperty("OPEN_AI_KEY") as String?
         buildConfigField("String", "openAIKey", "\"$openAIKey\"")
