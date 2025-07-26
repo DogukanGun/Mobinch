@@ -25,23 +25,21 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val oneinchKey: String? = System.getenv("ONEINCH_KEY")
-        val openAIKey: String? = System.getenv("OPEN_AI_KEY")
-        
-        if (oneinchKey != null && openAIKey != null) {
-            buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
-            buildConfigField("String", "openAIKey", "\"$openAIKey\"")
-        } else {
-            val localProperties = Properties()
-            val localPropertiesFile = rootProject.file("local.properties")
-            if (localPropertiesFile.exists()) {
-                localProperties.load(FileInputStream(localPropertiesFile))
-                buildConfigField("String", "oneinchKey", "\"${localProperties.getProperty("oneinch_key")}\"")
-                buildConfigField("String", "openAIKey", "\"${localProperties.getProperty("open_ai_key")}\"")
-            } else {
-                throw GradleException("Missing both environment variables and local.properties for API keys.")
-            }
+        // Load local.properties file if it exists
+        val localProperties = java.util.Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(java.io.FileInputStream(localPropertiesFile))
         }
+
+        // Read the oneinch_key. Prioritize the environment variable from GitHub Actions.
+        // The name in getenv() MUST match the name in the YAML file's `env` block.
+        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
+        buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
+
+        // Read the open_ai_key. Prioritize the environment variable.
+        val openAIKey = System.getenv("OPEN_AI_KEY") ?: localProperties.getProperty("open_ai_key")
+        buildConfigField("String", "openAIKey", "\"$openAIKey\"")
     }
 
     buildTypes {
