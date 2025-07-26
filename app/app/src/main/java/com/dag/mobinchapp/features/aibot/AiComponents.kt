@@ -60,6 +60,7 @@ import com.dag.mobinchapp.R
 import androidx.compose.material3.Divider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
+import com.dag.one_inch.MessageShortcut
 import kotlinx.coroutines.launch
 
 
@@ -68,7 +69,8 @@ internal fun MobinchAgentViewWithDrawer(
     state: AiBotVS.Success,
     onMessageSend: (String) -> Unit,
     onActionExecute: (AiBotVS.SuggestedAction) -> Unit,
-    onHeaderClick: () -> Unit
+    onHeaderClick: () -> Unit,
+    onChatFromMemorySelected: (memoryId: String) -> Unit
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -92,9 +94,14 @@ internal fun MobinchAgentViewWithDrawer(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(state.chatMessages.size) { index ->
-                        val message = state.chatMessages[index]
-                        ChatMessageItem(message = message)
+                    items(state.drawerMessages.size) { index ->
+                        val message = state.drawerMessages[index]
+                        DrawerChatMessageItem(message = message){
+                            scope.launch {
+                                drawerState.close()
+                            }
+                            onChatFromMemorySelected(message.id)
+                        }
                         Divider(color = Color(0xFF2D2D3F), thickness = 1.dp)
                     }
                 }
@@ -393,6 +400,34 @@ private fun ChatMessages(
         items(messages.size) { index->
             ChatMessageItem(message = messages.reversed()[index])
             Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+
+@Composable
+private fun DrawerChatMessageItem(
+    message: MessageShortcut,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2D2D3F)),
+            modifier = Modifier.widthIn(max = 280.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = message.firstMessage,
+                    fontSize = 14.sp,
+                    color = primaryText
+                )
+            }
         }
     }
 }

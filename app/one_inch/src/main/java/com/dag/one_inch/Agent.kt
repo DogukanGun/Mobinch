@@ -2,6 +2,7 @@ package com.dag.one_inch
 
 import com.dag.one_inch.tools.swap.FusionOrdersAgent
 import com.dag.one_inch.tools.swap.orders.SwapOrdersTool
+import dev.langchain4j.data.message.ChatMessage
 import dev.langchain4j.memory.chat.MessageWindowChatMemory
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel
@@ -17,6 +18,9 @@ import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
 import kotlinx.serialization.json.Json
+import java.util.UUID
+import dev.langchain4j.data.message.UserMessage
+import dev.langchain4j.data.message.AiMessage
 
 
 class Agent(
@@ -55,20 +59,56 @@ class Agent(
         }
     }
 
+    private fun createMemory(): String {
+        val newId = UUID.randomUUID().toString()
+        memoryMap[newId] = MessageWindowChatMemory.withMaxMessages(10)
+        return newId
+    }
+
     val swapOrdersTool = SwapOrdersTool(this)
 
-
-    fun ask(message: String, messageHistoryId: String): String {
-        val memory = getMemory(messageHistoryId)
+    fun ask(message: String, messageHistoryId: String? = null): ChatResponse {
+        val historyId = messageHistoryId ?: createMemory()
+        val memory = getMemory(historyId)
+        memory.add(UserMessage.from(message))
         val fusionAgent = AiServices.builder(FusionOrdersAgent::class.java)
             .chatModel(openAiModel)
             .tools(listOf(swapOrdersTool))
             .chatMemory(memory)
             .build()
         val response = fusionAgent.chat(message)
-        return response
+        memory.add(AiMessage.from(response))
+        return ChatResponse(response = response, id = historyId)
     }
 
+    fun getMessagesByHistory(memoryId: String): List<ChatMessage>? {
+        return memoryMap[memoryId]?.messages()
+    }
+
+    fun getMessagesByHistoryAsStrings(memoryId: String): List<String>? {
+        return memoryMap[memoryId]?.messages()?.mapNotNull { msg ->
+            when (msg) {
+                is UserMessage -> msg.singleText()
+                is AiMessage -> msg.text()
+                else -> null
+            }
+        }
+    }
+
+    fun getFirstMessageForEachMessages(): List<MessageShortcut> {
+        return memoryMap.mapNotNull { (key, memory) ->
+            val messages = memory.messages()
+            val firstMessage = messages.firstOrNull()
+            if (firstMessage is UserMessage) {
+                MessageShortcut(
+                    firstMessage = firstMessage.singleText(),
+                    id = key
+                )
+            } else {
+                null
+            }
+        }
+    }
 
     fun getAgentClient(): HttpClient = client
 

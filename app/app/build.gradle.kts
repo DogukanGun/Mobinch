@@ -148,4 +148,11 @@ dependencies {
     //Metamask
     implementation(libs.metamask.android.sdk)
 
+    //langchain4j
+    implementation(libs.langchain4j.kotlin)
+    implementation(libs.langchain4j.open.ai)
+    implementation(libs.langchain4j.core)
+    implementation(libs.langchain4j)
+    kapt(libs.langchain4j)
+
 }

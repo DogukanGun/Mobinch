@@ -46,14 +46,18 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //langchain4j
     implementation(libs.langchain4j.kotlin)
     implementation(libs.langchain4j.open.ai)
     implementation(libs.langchain4j.core)
     implementation(libs.langchain4j)
+    kapt(libs.langchain4j)
 
+    //ktor
     implementation(libs.ktor.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
+
+    //serialization
     implementation(libs.kotlinx.serialization.json.jvm)
-    kapt(libs.langchain4j)
 }
