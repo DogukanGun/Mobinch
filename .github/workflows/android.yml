@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "prod" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "prod" ]
 
 jobs:
   build:
@@ -13,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 11
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
           cache: gradle
 
@@ -24,4 +24,12 @@ jobs:
         run: chmod +x app/gradlew
 
       - name: Build with Gradle
-        run: ./app/gradlew build
+        working-directory: app
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        if: github.ref == 'refs/heads/prod'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/app/build/outputs/apk/release/app-release.apk
