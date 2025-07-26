@@ -30,19 +30,11 @@ jobs:
         env:
           ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
-      - name: Create local.properties
-        run: |
-          echo "ONEINCH_KEY=${{ secrets.ONEINCH_KEY }}" >> ./app/local.properties
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> ./app/local.properties
-          echo "AC_API_URL=${{ secrets.AC_API_URL }}" >> ./app/local.properties
-    
+
       - name: Build with Gradle
         working-directory: app
-        env:
-          ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
-          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
-        run: ./gradlew assembleRelease
-
+        run: ./gradlew assembleRelease -ONEINCH_KEY=${{ secrets.ONEINCH_KEY }} -OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}
+      
       - name: Upload APK (only on prod)
         if: github.ref == 'refs/heads/prod'
         uses: actions/upload-artifact@v4
