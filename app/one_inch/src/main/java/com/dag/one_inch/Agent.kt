@@ -1,7 +1,7 @@
-package com.dag.a1inch
+package com.dag.one_inch
 
-import com.dag.a1inch.tools.swap.FusionOrdersAgent
-import com.dag.a1inch.tools.swap.orders.SwapOrdersTool
+import com.dag.one_inch.tools.swap.FusionOrdersAgent
+import com.dag.one_inch.tools.swap.orders.SwapOrdersTool
 import dev.langchain4j.memory.chat.MessageWindowChatMemory
 import dev.langchain4j.model.chat.ChatModel
 import dev.langchain4j.model.openai.OpenAiChatModel

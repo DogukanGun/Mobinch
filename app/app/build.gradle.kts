@@ -19,20 +19,33 @@ android {
 
     defaultConfig {
         applicationId = "com.dag.mobinchapp"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val oneInchKey: String? = project.findProperty("ONEINCH_KEY") as String?
-        buildConfigField("String", "oneinchKey", "\"$oneInchKey\"")
+
+        // Load local.properties file if it exists
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(FileInputStream(localPropertiesFile))
+        }
+        // Read the oneinch_key. Prioritize the environment variable from GitHub Actions.
+        // The name in getenv() MUST match the name in the YAML file's `env` block.
+        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
+        buildConfigField("String", "oneinch_key", "\"$oneinchKey\"")
+
         // Read the open_ai_key. Prioritize the environment variable.
-        val openAIKey = project.findProperty("OPEN_AI_KEY") as String?
-        buildConfigField("String", "openAIKey", "\"$openAIKey\"")
+        val openAIKey = System.getenv("OPEN_AI_KEY") ?: localProperties.getProperty("open_ai_key")
+        buildConfigField("String", "open_ai_key", "\"$openAIKey\"")
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(
@@ -43,11 +56,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
     buildFeatures {
         compose = true
@@ -56,6 +71,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,6 +83,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.vision.internal.vkp)
+    implementation(project(":one_inch"))
     testImplementation(libs.junit)
     implementation(libs.androidx.material.icons.extended)
 
@@ -129,6 +146,7 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlinx.metadata.jvm)
 
+    //Metamask
     implementation(libs.metamask.android.sdk)
 
 }

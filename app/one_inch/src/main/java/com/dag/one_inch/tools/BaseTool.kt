@@ -1,7 +1,7 @@
-package com.dag.a1inch.tools
+package com.dag.one_inch.tools
 
-import com.dag.a1inch.Agent
-import com.dag.a1inch.Agent.Companion.json
+import com.dag.one_inch.Agent
+import com.dag.one_inch.Agent.Companion.json
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post

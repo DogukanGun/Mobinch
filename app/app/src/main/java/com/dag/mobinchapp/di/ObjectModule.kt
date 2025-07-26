@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import com.dag.mobinchapp.BuildConfig
-import com.dag.mobinchapp.base.AlertDialogManager
+import com.dag.mobinchapp.base.helper.AlertDialogManager
+import com.dag.mobinchapp.base.helper.WalletManagement
+import com.dag.mobinchapp.base.helper.WalletManagementImpl
 import com.dag.mobinchapp.base.navigation.DefaultNavigator
 import com.dag.mobinchapp.base.navigation.Destination
 import com.dag.mobinchapp.base.scroll.ScrollStateManager
@@ -133,4 +135,9 @@ class ObjectModules {
         }
     }
 
+    @Provides
+    @Singleton
+    fun provideWalletManagement(@ApplicationContext context: Context): WalletManagement {
+        return WalletManagementImpl(context)
+    }
 }

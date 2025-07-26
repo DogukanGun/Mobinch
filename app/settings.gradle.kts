@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MobinchApp"
 include(":app")
-include(":app:1inch")
+include(":one_inch")

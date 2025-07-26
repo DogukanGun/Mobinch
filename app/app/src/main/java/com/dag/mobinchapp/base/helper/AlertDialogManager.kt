@@ -1,4 +1,4 @@
-package com.dag.mobinchapp.base
+package com.dag.mobinchapp.base.helper
 
 import com.dag.mobinchapp.base.navigation.Destination
 import com.dag.mobinchapp.data.AlertDialogButton
