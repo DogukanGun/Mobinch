@@ -26,12 +26,11 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Load local.properties file if it exists
-        val localProperties = java.util.Properties()
+        val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
-            localProperties.load(java.io.FileInputStream(localPropertiesFile))
+            localProperties.load(FileInputStream(localPropertiesFile))
         }
-
         // Read the oneinch_key. Prioritize the environment variable from GitHub Actions.
         // The name in getenv() MUST match the name in the YAML file's `env` block.
         val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
