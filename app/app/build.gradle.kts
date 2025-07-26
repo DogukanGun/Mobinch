@@ -25,16 +25,23 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        localProperties.load(FileInputStream(localPropertiesFile))
-
-        val oneinchKey = localProperties.getProperty("oneinch_key")
-        buildConfigField("String", "oneinchKey", oneinchKey)
-
-        val openAIKey = localProperties.getProperty("open_ai_key")
-        buildConfigField("String", "openAIKey", openAIKey)
-
+        val oneinchKey: String? = System.getenv("ONEINCH_KEY")
+        val openAIKey: String? = System.getenv("OPEN_AI_KEY")
+        
+        if (oneinchKey != null && openAIKey != null) {
+            buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
+            buildConfigField("String", "openAIKey", "\"$openAIKey\"")
+        } else {
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(FileInputStream(localPropertiesFile))
+                buildConfigField("String", "oneinchKey", "\"${localProperties.getProperty("oneinch_key")}\"")
+                buildConfigField("String", "openAIKey", "\"${localProperties.getProperty("open_ai_key")}\"")
+            } else {
+                throw GradleException("Missing both environment variables and local.properties for API keys.")
+            }
+        }
     }
 
     buildTypes {
