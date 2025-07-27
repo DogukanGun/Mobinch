@@ -29,11 +29,7 @@ jobs:
           echo "OPEN_AI_KEY is ${OPEN_AI_KEY:0:4}***"
         env:
           ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
-          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
-      - name: Print local.properties
-        working-directory: app
-        run: cat local.properties
-      
+          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}      
       - name: Get local.properties from secrets
         working-directory: app
         env:
@@ -42,6 +38,9 @@ jobs:
         run: |
           echo "ONEINCH_KEY=$ONEINCH_KEY" > local.properties
           echo "OPEN_AI_KEY=$OPEN_AI_KEY" >> local.properties
+      - name: Print local.properties
+        working-directory: app
+        run: cat local.properties
       - name: Build with Gradle
         working-directory: app
         run: ./gradlew assembleRelease
