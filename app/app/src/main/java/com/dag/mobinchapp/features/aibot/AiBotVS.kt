@@ -1,6 +1,7 @@
 package com.dag.mobinchapp.features.aibot
 
 import com.dag.mobinchapp.base.BaseVS
+import com.dag.one_inch.MessageShortcut
 import java.util.UUID
 
 
@@ -8,13 +9,15 @@ sealed class AiBotVS: BaseVS {
     object Loading : AiBotVS()
 
     data class Success(
-        val chatMessages: List<ChatMessage> = emptyList(),
+        val chatMessages: List<ChatMessage> ,
         val isHeaderExpanded: Boolean = false,
         val showSwapDialog: Boolean = false,
         val suggestedActions: List<SuggestedAction> = emptyList(),
         val showStakeDialog: Boolean = false,
         val showWalletConnectionDialog: Boolean = false,
-        val isWalletConnected: Boolean = false
+        val isWalletConnected: Boolean = false,
+        val drawerMessages: List<MessageShortcut> = emptyList(),
+        var selectedMessageId: String? = null
     ) : AiBotVS()
 
     data class Error(val message: String) : AiBotVS()

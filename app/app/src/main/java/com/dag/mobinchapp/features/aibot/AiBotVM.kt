@@ -7,7 +7,11 @@ import com.dag.mobinchapp.base.BaseVM
 import com.dag.mobinchapp.base.components.bottomnav.BottomNavMessageManager
 import com.dag.mobinchapp.base.helper.WalletManagement
 import com.dag.mobinchapp.base.scroll.ScrollStateManager
+import com.dag.mobinchapp.data.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.langchain4j.data.message.AiMessage
+import dev.langchain4j.data.message.SystemMessage
+import dev.langchain4j.data.message.UserMessage
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import io.metamask.androidsdk.Result
@@ -23,6 +27,8 @@ class AiBotVM @Inject constructor(
         scrollManager.updateScrolling(true)
         initializeAgent()
     }
+
+    private val agent = Agent(BuildConfig.open_ai_key, BuildConfig.oneinch_key)
 
     private fun initializeAgent() {
         viewModelScope.launch {
@@ -43,7 +49,6 @@ class AiBotVM @Inject constructor(
         }
     }
 
-
     fun connectWallet() {
         val currentState = _viewState.value
         walletManagementImpl.connect {
@@ -62,10 +67,56 @@ class AiBotVM @Inject constructor(
         }
     }
 
+    fun chooseMemory(memoryId: String) {
+        if (_viewState.value is AiBotVS.Success) {
+            val currentState = _viewState.value as AiBotVS.Success
+            val messageHistory = agent.getMessagesByHistory(memoryId)
+            val messages: List<AiBotVS.ChatMessage> = messageHistory?.map { chatMessage ->
+                val isFromAi = when(chatMessage){
+                    is UserMessage -> false
+                    is AiMessage -> true
+                    is SystemMessage -> true
+                    else -> false
+                }
+                val text = when (chatMessage) {
+                    is UserMessage -> chatMessage.singleText()
+                    is AiMessage -> chatMessage.text()
+                    else -> "----"
+                }
+                AiBotVS.ChatMessage(
+                    content = text,
+                    isFromAI = isFromAi,
+                )
+            } ?: emptyList()
+            _viewState.value = currentState.copy(
+                chatMessages = messages,
+                selectedMessageId = memoryId
+            )
+        } else {
+            //TODO show error message
+        }
+    }
+
     fun sendMessage(content: String) {
-        val agent = Agent(BuildConfig.open_ai_key, BuildConfig.oneinch_key)
-        agent.ask(content,"")
-        throw NotImplementedError()
+        if (_viewState.value is AiBotVS.Success) {
+            val currentState = _viewState.value as AiBotVS.Success
+            val response = agent.ask(content, currentState.selectedMessageId)
+            if (currentState.selectedMessageId == null) {
+                currentState.selectedMessageId = response.id
+            }
+            val newMessageList = currentState.chatMessages.toMutableList().apply {
+                this.add(AiBotVS.ChatMessage(
+                    content = response.response,
+                    isFromAI = true
+                ))
+            }
+            _viewState.value = currentState.copy(
+                selectedMessageId = response.id,
+                chatMessages = newMessageList
+            )
+        } else {
+           _viewState.value = AiBotVS.Error("Unknown error, please restart the app")
+        }
     }
 
     fun dismissWalletConnectionDialog() {

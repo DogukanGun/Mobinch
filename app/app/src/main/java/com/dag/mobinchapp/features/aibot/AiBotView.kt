@@ -33,7 +33,8 @@ fun AiBotScreen(
                     state = successState,
                     onMessageSend = { viewModel.sendMessage(it) },
                     onActionExecute = { viewModel.executeAction(it) },
-                    onHeaderClick = { viewModel.toggleHeader() }
+                    onHeaderClick = { viewModel.toggleHeader() },
+                    onChatFromMemorySelected = { viewModel.chooseMemory(it) }
                 )
 
                 // Show Wallet Connection Dialog
