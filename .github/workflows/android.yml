@@ -36,8 +36,8 @@ jobs:
           ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
         run: |
-          echo "ONEINCH_KEY=$ONEINCH_KEY" > local.properties
-          echo "OPEN_AI_KEY=$OPEN_AI_KEY" >> local.properties
+          echo "oneinch_key=$ONEINCH_KEY" > local.properties
+          echo "open_ai_key=$OPEN_AI_KEY" >> local.properties
       - name: Print local.properties
         working-directory: app
         run: cat local.properties
