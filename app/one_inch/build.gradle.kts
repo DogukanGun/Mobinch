@@ -39,6 +39,9 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.vision.internal.vkp)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -52,11 +55,16 @@ dependencies {
     implementation(libs.langchain4j.core)
     implementation(libs.langchain4j)
     kapt(libs.langchain4j)
+    implementation(libs.kotlin.langchain4j.kotlin)
 
     //ktor
     implementation(libs.ktor.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.ai)
+    implementation("dev.langchain4j:langchain4j-vertex-ai-gemini:0.29.0")
 
     //serialization
     implementation(libs.kotlinx.serialization.json.jvm)

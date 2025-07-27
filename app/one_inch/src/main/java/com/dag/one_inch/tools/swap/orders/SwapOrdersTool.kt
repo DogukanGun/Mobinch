@@ -6,7 +6,7 @@ import com.dag.one_inch.filterNotNullValues
 import com.dag.one_inch.tools.BaseTool
 import dev.langchain4j.agent.tool.Tool
 
-class SwapOrdersTool(agent: Agent) : BaseTool(agent) {
+class SwapOrdersTool(oneinchKey: String) : BaseTool(oneinchKey) {
 
     companion object {
         const val BASE_URL = Registery.BASE_URL + "fusion-plus/orders/v1.0/order/"

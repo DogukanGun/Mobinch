@@ -17,6 +17,38 @@ android {
     namespace = "com.dag.mobinchapp"
     compileSdk = 35
 
+    packaging {
+        resources {
+            excludes += listOf(
+                // Duplicate file issues
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+                "META-INF/MANIFEST.MF",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+
+                // Signature files that cause security exceptions
+                "META-INF/*.SF",
+                "META-INF/*.DSA",
+                "META-INF/*.RSA",
+                "META-INF/*.EC",
+                "META-INF/*.MF",
+
+                // Other common conflicts
+                "META-INF/INDEX.LIST",
+                "META-INF/DEPENDENCIES",
+                "META-INF/NOTICE",
+                "META-INF/LICENSE",
+                "META-INF/ASL2.0",
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/proguard/**"
+            )
+        }
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     defaultConfig {
         applicationId = "com.dag.mobinchapp"
         minSdk = 28
@@ -101,6 +133,7 @@ dependencies {
 
     //Network
     implementation(libs.converter.gson)
+    implementation(libs.okhttp)
     implementation(libs.ktor.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
@@ -154,5 +187,4 @@ dependencies {
     implementation(libs.langchain4j.core)
     implementation(libs.langchain4j)
     kapt(libs.langchain4j)
-
 }

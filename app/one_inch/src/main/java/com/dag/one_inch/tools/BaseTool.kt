@@ -1,8 +1,17 @@
 package com.dag.one_inch.tools
 
-import com.dag.one_inch.Agent
 import com.dag.one_inch.Agent.Companion.json
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.logging.SIMPLE
+import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -12,13 +21,28 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 
 open class BaseTool(
-    val agent: Agent
+    val oneinchKey: String
 ) {
+    val client = HttpClient(CIO) {
+        install(Logging) {
+            logger = Logger.SIMPLE
+            level = LogLevel.INFO
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 10000L
+            connectTimeoutMillis = 10000L
+            socketTimeoutMillis = 10000L
+        }
+        defaultRequest {
+            header("Authorization", "Bearer $oneinchKey")
+            accept(ContentType.Application.Json)
+        }
+    }
     internal suspend inline fun <reified T> getDecodedResponse(
         url: String,
         params: Map<String, Any>? = null
     ): T {
-        val response = agent.getAgentClient().get(url) {
+        val response = client.get(url) {
             params?.forEach { (key, value) ->
                 parameter(key, value)
             }
@@ -36,7 +60,7 @@ open class BaseTool(
         url: String,
         requestBody: Req
     ): Resp {
-        val response = agent.getAgentClient().post(url) {
+        val response = client.post(url) {
             contentType(ContentType.Application.Json)
             setBody(requestBody)
         }

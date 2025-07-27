@@ -2,6 +2,7 @@ package com.dag.mobinchapp.features.splash
 
 import android.content.pm.PackageManager
 import androidx.lifecycle.viewModelScope
+import com.dag.mobinchapp.BuildConfig
 import com.dag.mobinchapp.base.helper.ActivityHolder
 import com.dag.mobinchapp.base.helper.AlertDialogManager
 import com.dag.mobinchapp.base.BaseVM
@@ -30,7 +31,7 @@ class SplashVM @Inject constructor(
     }
 
     private fun checkWallets(){
-        if (!isMetamaskWalletInstalled()){
+        if (!isMetamaskWalletInstalled() && !BuildConfig.DEBUG){
             viewModelScope.launch {
                 alertDialogManager.showAlert(
                     AlertDialogModel(

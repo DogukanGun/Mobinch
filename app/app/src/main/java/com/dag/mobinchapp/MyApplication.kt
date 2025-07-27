@@ -1,11 +1,11 @@
 package com.dag.mobinchapp
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class MyApplication: MultiDexApplication() {
+class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this);
