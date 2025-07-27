@@ -30,10 +30,17 @@ jobs:
         env:
           ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
           OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
-
+      - name: Get local.properties from secrets
+        working-directory: app
+        env:
+          ONEINCH_KEY: ${{ secrets.ONEINCH_KEY }}
+          OPEN_AI_KEY: ${{ secrets.OPEN_AI_KEY }}
+        run: |
+          echo "ONEINCH_KEY=${{ secrets.ONEINCH_KEY }}" >> $GITHUB_WORKSPACE/local.properties
+          echo "OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}" >> $GITHUB_WORKSPACE/local.properties
       - name: Build with Gradle
         working-directory: app
-        run: ./gradlew assembleRelease -ONEINCH_KEY=${{ secrets.ONEINCH_KEY }} -OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}
+        run: ./gradlew assembleRelease
       
       - name: Upload APK (only on prod)
         if: github.ref == 'refs/heads/prod'
