@@ -25,11 +25,19 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val oneinchKey = System.getenv("ONEINCH_KEY")
-        buildConfigField("String", "oneinchKey", "\"$oneinchKey\"")
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(FileInputStream(localPropertiesFile))
+        }
+        // Read the oneinch_key. Prioritize the environment variable from GitHub Actions.
+        // The name in getenv() MUST match the name in the YAML file's `env` block.
+        val oneinchKey = System.getenv("ONEINCH_KEY") ?: localProperties.getProperty("oneinch_key")
+        buildConfigField("String", "oneinch_key", "\"$oneinchKey\"")
 
-        val openAIKey = System.getenv("OPEN_AI_KEY")
-        buildConfigField("String", "openAIKey", "\"$openAIKey\"")
+        // Read the open_ai_key. Prioritize the environment variable.
+        val openAIKey = System.getenv("OPEN_AI_KEY") ?: localProperties.getProperty("open_ai_key")
+        buildConfigField("String", "open_ai_key", "\"$openAIKey\"")
     }
 
     buildTypes {
