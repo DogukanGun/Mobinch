@@ -107,6 +107,10 @@ class AiBotVM @Inject constructor(
                 }
                 val newMessageList = currentState.chatMessages.toMutableList().apply {
                     this.add(AiBotVS.ChatMessage(
+                        content = content,
+                        isFromAI = false
+                    ))
+                    this.add(AiBotVS.ChatMessage(
                         content = response.response,
                         isFromAI = true
                     ))
