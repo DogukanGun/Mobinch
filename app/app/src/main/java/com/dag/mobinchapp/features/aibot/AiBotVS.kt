@@ -17,7 +17,8 @@ sealed class AiBotVS: BaseVS {
         val showWalletConnectionDialog: Boolean = false,
         val isWalletConnected: Boolean = false,
         val drawerMessages: List<MessageShortcut> = emptyList(),
-        var selectedMessageId: String? = null
+        var selectedMessageId: String? = null,
+        val showApiKeyDialog: Boolean = false // New state for API key dialog
     ) : AiBotVS()
 
     data class Error(val message: String) : AiBotVS()
@@ -35,7 +36,8 @@ sealed class AiBotVS: BaseVS {
         SEND,
         STAKE,
         RESOLVER,
-        VIEW_TOKEN
+        VIEW_TOKEN,
+        API_KEY_CONFIG
     }
     data class ChatMessage(
         val id: String = UUID.randomUUID().toString(),

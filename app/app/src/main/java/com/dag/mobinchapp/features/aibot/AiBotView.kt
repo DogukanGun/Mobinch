@@ -45,6 +45,14 @@ fun AiBotScreen(
                     )
                 }
 
+                // Show API Key Configuration Dialog
+                if (successState.showApiKeyDialog) {
+                    ApiKeyConfigDialog(
+                        onDismiss = { viewModel.dismissApiKeyDialog() },
+                        onSave = { viewModel.saveApiKey(it) }
+                    )
+                }
+
             }
             is AiBotVS.Error -> {
 

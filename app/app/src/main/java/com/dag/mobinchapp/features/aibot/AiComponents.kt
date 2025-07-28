@@ -305,6 +305,18 @@ private fun AnimatedHeader(
                                 )
                             }
                         )
+                        QuickActionButton(
+                            title = "Configure API Key",
+                            onClick = {
+                                onActionExecute(
+                                    AiBotVS.SuggestedAction(
+                                        title = "Configure API Key",
+                                        description = "Set up your 1inch or OpenAI API key",
+                                        type = AiBotVS.ActionType.API_KEY_CONFIG
+                                    )
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -531,6 +543,106 @@ fun WalletConnectionDialog(
                 ) {
                     Text(
                         text = "Connect Wallet",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color(0xFFAAAAAA)
+                    )
+                ) {
+                    Text(
+                        text = "Cancel",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ApiKeyConfigDialog(
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var apiKey by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF1E1E2E)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Configure API Key",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Enter your 1inch or OpenAI API key to personalize the AI agent.",
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    color = Color(0xFFAAAAAA)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TextField(
+                    value = apiKey,
+                    onValueChange = { apiKey = it },
+                    placeholder = {
+                        Text(
+                            text = "Enter API Key",
+                            color = secondaryText
+                        )
+                    },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFF2D2D3F),
+                        unfocusedContainerColor = Color(0xFF2D2D3F),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = { onSave(apiKey) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6E56CF)
+                    )
+                ) {
+                    Text(
+                        text = "Save API Key",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )

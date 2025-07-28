@@ -1,6 +1,10 @@
 package com.dag.one_inch
 
 import com.dag.one_inch.tools.createSwapTools
+import com.dag.one_inch.tools.createDomainsTools
+import com.dag.one_inch.tools.createGasPriceTools
+import com.dag.one_inch.tools.createTokenDetailTools
+import com.dag.one_inch.tools.createTraceTools
 import com.dag.one_inch.tools.swap.FusionOrdersAgent
 import com.dag.one_inch.tools.swap.orders.OrdersByHashesInput
 import com.dag.one_inch.tools.swap.orders.SwapOrdersTool
@@ -23,10 +27,13 @@ import com.google.firebase.ai.type.asTextOrNull
 import com.google.firebase.ai.type.content
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.serialization.json.JsonObject
+import com.dag.one_inch.tools.domains.DomainsTool
+import com.dag.one_inch.tools.gasprice.GasPriceTool
+import com.dag.one_inch.tools.token.detail.TokenDetailTools
+import com.dag.one_inch.tools.traces.TraceTools
 
 class Agent(
-    openApiKey: String,
-    oneinchKey: String
+    var oneinchKey: String
 ) {
     companion object {
         const val BASE_URL = "https://api.1inch.dev/swap/v5.2/1/tokens"
@@ -38,14 +45,24 @@ class Agent(
     // Switched from LangChain4j memory to a simple map storing conversation history
     private val memoryMap = mutableMapOf<String, MutableList<Content>>()
 
-    // Instantiate your tool class directly
+    // Instantiate your tool classes directly
     private val swapOrdersTool = SwapOrdersTool(oneinchKey)
+    private val domainsTool = DomainsTool(oneinchKey)
+    private val gasPriceTool = GasPriceTool(oneinchKey)
+    private val tokenDetailTool = TokenDetailTools(oneinchKey)
+    private val traceTool = TraceTools(oneinchKey)
 
     @OptIn(PublicPreviewAPI::class)
     private val model = Firebase.ai(backend = GenerativeBackend.googleAI())
         .generativeModel(
             modelName = "gemini-1.5-flash",
-            tools = createSwapTools()
+            tools = listOf(
+                createSwapTools(),
+                createDomainsTools(),
+                createGasPriceTools(),
+                createTokenDetailTools(),
+                createTraceTools()
+            ).flatten()
         )
 
     private fun getMemory(id: String): MutableList<Content> =
@@ -66,6 +83,7 @@ class Agent(
         val result = try {
             withTimeout(REQUEST_TIMEOUT) {
                 when (functionName) {
+                    // Swap Orders Tools
                     "getCrossChainActiveOrders" -> swapOrdersTool.getCrossChainActiveOrders()
                     "getEscrowFactoryContractAddress" -> swapOrdersTool.getEscrowFactoryContractAddress(
                         (args["chainId"] as? Double)?.toInt() ?: 1
@@ -99,6 +117,76 @@ class Agent(
                         val hashes = bodyMap["orderHashes"]!!
                         swapOrdersTool.getAllOrdersByHashes(OrdersByHashesInput(hashes))
                     }
+                    
+                    // Domains Tools
+                    "getAddressFromDomain" -> domainsTool.getAddressFromDomain(
+                        args["name"] as String
+                    )
+                    "getDomainFromAddress" -> domainsTool.getDomainFromAddress(
+                        args["address"] as String
+                    )
+                    "getProviderDataWithAvatar" -> domainsTool.getProviderDataWithAvatar(
+                        args["addressOrDomain"] as String
+                    )
+                    "getDomainForAddresses" -> {
+                        val addresses = args["addresses"] as List<String>
+                        domainsTool.getDomainForAddresses(addresses)
+                    }
+                    
+                    // Gas Price Tools
+                    "getGasPrice" -> gasPriceTool.getGasPrice(
+                        args["chain"] as String
+                    )
+                    
+                    // Token Detail Tools
+                    "getChainTokenInfo" -> tokenDetailTool.getChainTokenInfo(
+                        args["chain"] as String
+                    )
+                    "getTokenInfo" -> tokenDetailTool.getTokenInfo(
+                        chain = args["chain"] as String,
+                        contractAddress = args["contractAddress"] as String
+                    )
+                    "getRangeCharts" -> tokenDetailTool.getRangeCharts(
+                        args["chain"] as String
+                    )
+                    "getTokenRangeCharts" -> tokenDetailTool.getTokenRangeCharts(
+                        chain = args["chain"] as String,
+                        tokenAddress = args["tokenAddress"] as String
+                    )
+                    "getIntervalCharts" -> tokenDetailTool.getIntervalCharts(
+                        args["chain"] as String
+                    )
+                    "getTokenIntervalCharts" -> tokenDetailTool.getTokenIntervalCharts(
+                        chain = args["chain"] as String,
+                        tokenAddress = args["tokenAddress"] as String
+                    )
+                    "getPriceChange" -> tokenDetailTool.getPriceChange(
+                        args["chain"] as String
+                    )
+                    "getTokenPriceChange" -> tokenDetailTool.getTokenPriceChange(
+                        chain = args["chain"] as String,
+                        tokenAddress = args["tokenAddress"] as String
+                    )
+                    
+                    // Trace Tools
+                    "getSyncedInterval" -> traceTool.getSyncedInterval(
+                        args["chain"] as String
+                    )
+                    "getBlockTrace" -> traceTool.getBlockTrace(
+                        chain = args["chain"] as String,
+                        blockNumber = (args["blockNumber"] as Double).toLong()
+                    )
+                    "getBlockTraceTx" -> traceTool.getBlockTraceTx(
+                        chain = args["chain"] as String,
+                        blockNumber = (args["blockNumber"] as Double).toLong(),
+                        txHash = args["txHash"] as String
+                    )
+                    "getBlockTraceWithOffset" -> traceTool.getBlockTraceWithOffset(
+                        chain = args["chain"] as String,
+                        blockNumber = (args["blockNumber"] as Double).toLong(),
+                        offset = (args["offset"] as Double).toLong()
+                    )
+                    
                     else -> error("Unknown function: $functionName")
                 }
             }
@@ -174,5 +262,9 @@ class Agent(
                 )
             }
         }
+    }
+
+    fun updateApiKey(newOneinchApiKey: String) {
+        this.oneinchKey = newOneinchApiKey
     }
 }

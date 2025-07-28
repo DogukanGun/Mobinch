@@ -28,7 +28,7 @@ class AiBotVM @Inject constructor(
         initializeAgent()
     }
 
-    private val agent = Agent(BuildConfig.open_ai_key, BuildConfig.oneinch_key)
+    private val agent = Agent(BuildConfig.oneinch_key)
 
     private fun initializeAgent() {
         viewModelScope.launch {
@@ -130,7 +130,16 @@ class AiBotVM @Inject constructor(
     }
 
     fun executeAction(action: AiBotVS.SuggestedAction) {
-        throw NotImplementedError()
+        when (action.type) {
+            AiBotVS.ActionType.API_KEY_CONFIG -> showApiKeyDialog()
+            AiBotVS.ActionType.RESOLVER -> {
+                // Existing resolver logic
+            }
+            else -> {
+                // Existing or default action handling
+                throw NotImplementedError("Action ${action.type} not implemented")
+            }
+        }
     }
 
     fun toggleHeader() {
@@ -139,6 +148,28 @@ class AiBotVM @Inject constructor(
             _viewState.value = currentState.copy(
                 isHeaderExpanded = !currentState.isHeaderExpanded
             )
+        }
+    }
+
+    fun showApiKeyDialog() {
+        val currentState = _viewState.value
+        if (currentState is AiBotVS.Success) {
+            _viewState.value = currentState.copy(showApiKeyDialog = true)
+        }
+    }
+
+    fun dismissApiKeyDialog() {
+        val currentState = _viewState.value
+        if (currentState is AiBotVS.Success) {
+            _viewState.value = currentState.copy(showApiKeyDialog = false)
+        }
+    }
+
+    fun saveApiKey(apiKey: String) {
+        agent.updateApiKey(apiKey)
+        dismissApiKeyDialog()
+        viewModelScope.launch {
+            bottomNavManager.showMessage("API Key Updated Successfully")
         }
     }
 }

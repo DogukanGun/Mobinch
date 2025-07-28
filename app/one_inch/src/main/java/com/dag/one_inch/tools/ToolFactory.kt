@@ -93,3 +93,177 @@ fun createSwapTools(): List<Tool> {
         )
     return listOf(Tool.functionDeclarations(functionDeclarationList))
 }
+
+@OptIn(PublicPreviewAPI::class)
+fun createDomainsTools(): List<Tool> {
+    val getAddressFromDomainTool = FunctionDeclaration(
+        name = "getAddressFromDomain",
+        description = "Returns domains for address if existed",
+        parameters = mapOf(
+            "name" to Schema.string("Domain name to look up")
+        )
+    )
+    val getDomainFromAddressTool = FunctionDeclaration(
+        name = "getDomainFromAddress",
+        description = "Returns domain for address if existed",
+        parameters = mapOf(
+            "address" to Schema.string("Wallet address to look up")
+        )
+    )
+    val getProviderDataWithAvatarTool = FunctionDeclaration(
+        name = "getProviderDataWithAvatar",
+        description = "Get provider data with avatar for an address or domain",
+        parameters = mapOf(
+            "addressOrDomain" to Schema.string("Address or domain to fetch provider data")
+        )
+    )
+    val getDomainForAddressesTool = FunctionDeclaration(
+        name = "getDomainForAddresses",
+        description = "Get domains for multiple addresses",
+        parameters = mapOf(
+            "addresses" to Schema.array(
+                items = Schema.string("Wallet address"),
+                description = "List of addresses to look up domains for"
+            )
+        )
+    )
+    val functionDeclarationList = listOf(
+        getAddressFromDomainTool,
+        getDomainFromAddressTool,
+        getProviderDataWithAvatarTool,
+        getDomainForAddressesTool
+    )
+    return listOf(Tool.functionDeclarations(functionDeclarationList))
+}
+
+@OptIn(PublicPreviewAPI::class)
+fun createGasPriceTools(): List<Tool> {
+    val getGasPriceTool = FunctionDeclaration(
+        name = "getGasPrice",
+        description = "Get gas price for a specific chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier to get gas price for")
+        )
+    )
+    val functionDeclarationList = listOf(getGasPriceTool)
+    return listOf(Tool.functionDeclarations(functionDeclarationList))
+}
+
+@OptIn(PublicPreviewAPI::class)
+fun createTokenDetailTools(): List<Tool> {
+    val getChainTokenInfoTool = FunctionDeclaration(
+        name = "getChainTokenInfo",
+        description = "Get token info for a specific chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier to get token info for")
+        )
+    )
+    val getTokenInfoTool = FunctionDeclaration(
+        name = "getTokenInfo",
+        description = "Get token info for a specific contract on a chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "contractAddress" to Schema.string("Contract address of the token")
+        )
+    )
+    val getRangeChartsTool = FunctionDeclaration(
+        name = "getRangeCharts",
+        description = "Get chart data (range) for all tokens on a chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier")
+        )
+    )
+    val getTokenRangeChartsTool = FunctionDeclaration(
+        name = "getTokenRangeCharts",
+        description = "Get range chart data for a specific token",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "tokenAddress" to Schema.string("Token contract address")
+        )
+    )
+    val getIntervalChartsTool = FunctionDeclaration(
+        name = "getIntervalCharts",
+        description = "Get chart data (interval) for all tokens on a chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier")
+        )
+    )
+    val getTokenIntervalChartsTool = FunctionDeclaration(
+        name = "getTokenIntervalCharts",
+        description = "Get interval chart data for a specific token",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "tokenAddress" to Schema.string("Token contract address")
+        )
+    )
+    val getPriceChangeTool = FunctionDeclaration(
+        name = "getPriceChange",
+        description = "Get price change for all tokens on a chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier")
+        )
+    )
+    val getTokenPriceChangeTool = FunctionDeclaration(
+        name = "getTokenPriceChange",
+        description = "Get price change for a specific token",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "tokenAddress" to Schema.string("Token contract address")
+        )
+    )
+    val functionDeclarationList = listOf(
+        getChainTokenInfoTool,
+        getTokenInfoTool,
+        getRangeChartsTool,
+        getTokenRangeChartsTool,
+        getIntervalChartsTool,
+        getTokenIntervalChartsTool,
+        getPriceChangeTool,
+        getTokenPriceChangeTool
+    )
+    return listOf(Tool.functionDeclarations(functionDeclarationList))
+}
+
+@OptIn(PublicPreviewAPI::class)
+fun createTraceTools(): List<Tool> {
+    val getSyncedIntervalTool = FunctionDeclaration(
+        name = "getSyncedInterval",
+        description = "Get synced interval for a chain",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier")
+        )
+    )
+    val getBlockTraceTool = FunctionDeclaration(
+        name = "getBlockTrace",
+        description = "Get full block trace by block number",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "blockNumber" to Schema.integer("Block number to trace")
+        )
+    )
+    val getBlockTraceTxTool = FunctionDeclaration(
+        name = "getBlockTraceTx",
+        description = "Get transaction trace within block by txHash",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "blockNumber" to Schema.integer("Block number"),
+            "txHash" to Schema.string("Transaction hash")
+        )
+    )
+    val getBlockTraceWithOffsetTool = FunctionDeclaration(
+        name = "getBlockTraceWithOffset",
+        description = "Get block trace with offset pagination",
+        parameters = mapOf(
+            "chain" to Schema.string("Chain identifier"),
+            "blockNumber" to Schema.integer("Block number"),
+            "offset" to Schema.integer("Offset for pagination")
+        )
+    )
+    val functionDeclarationList = listOf(
+        getSyncedIntervalTool,
+        getBlockTraceTool,
+        getBlockTraceTxTool,
+        getBlockTraceWithOffsetTool
+    )
+    return listOf(Tool.functionDeclarations(functionDeclarationList))
+}
