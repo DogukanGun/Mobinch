@@ -21,7 +21,6 @@ class TransactionGatewayTool(oneinchKey: String) : BaseTool(oneinchKey) {
         )
     }
 
-    @Tool("Broadcast public transaction")
     suspend fun broadcastPrivateTransaction(
         chainId: String,
         body: BroadcastRequest
