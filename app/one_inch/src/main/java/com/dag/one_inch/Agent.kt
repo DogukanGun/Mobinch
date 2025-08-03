@@ -42,7 +42,6 @@ class Agent(
         private const val MAX_HISTORY = 20 // Keep last 20 messages (10 user, 10 model)
     }
 
-    // Switched from LangChain4j memory to a simple map storing conversation history
     private val memoryMap = mutableMapOf<String, MutableList<Content>>()
 
     // Instantiate your tool classes directly
@@ -88,6 +87,7 @@ class Agent(
                     "getEscrowFactoryContractAddress" -> swapOrdersTool.getEscrowFactoryContractAddress(
                         (args["chainId"] as? Double)?.toInt() ?: 1
                     )
+
                     "getOrdersByMakerAddress" -> swapOrdersTool.getOrdersByMakerAddress(
                         address = args["address"] as String,
                         page = (args["page"] as? Double)?.toInt(),
@@ -101,92 +101,109 @@ class Agent(
                         srcChainId = (args["srcChainId"] as? Double)?.toInt(),
                         chainId = (args["chainId"] as Double).toInt()
                     )
+
                     "getAllDataAboutResolver" -> swapOrdersTool.getAllDataAboutResolver(
                         args["orderHash"] as String
                     )
+
                     "getIdxOfEachSecretsForSpecificOrder" -> swapOrdersTool.getIdxOfEachSecretsForSpecificOrder(
                         args["orderHash"] as String
                     )
+
                     "getIdxOfEachSecretForAllOrders" -> swapOrdersTool.getIdxOfEachSecretForAllOrders()
                     "getAllDataToPerformOpsOnPublicPeriods" -> swapOrdersTool.getAllDataToPerformOpsOnPublicPeriods()
                     "getOrderByHash" -> swapOrdersTool.getOrderByHash(
                         args["orderHash"] as String
                     )
+
                     "getAllOrdersByHashes" -> {
                         val bodyMap = args["body"] as Map<String, List<String>>
                         val hashes = bodyMap["orderHashes"]!!
                         swapOrdersTool.getAllOrdersByHashes(OrdersByHashesInput(hashes))
                     }
-                    
+
                     // Domains Tools
                     "getAddressFromDomain" -> domainsTool.getAddressFromDomain(
                         args["name"] as String
                     )
+
                     "getDomainFromAddress" -> domainsTool.getDomainFromAddress(
                         args["address"] as String
                     )
+
                     "getProviderDataWithAvatar" -> domainsTool.getProviderDataWithAvatar(
                         args["addressOrDomain"] as String
                     )
+
                     "getDomainForAddresses" -> {
                         val addresses = args["addresses"] as List<String>
                         domainsTool.getDomainForAddresses(addresses)
                     }
-                    
+
                     // Gas Price Tools
                     "getGasPrice" -> gasPriceTool.getGasPrice(
                         args["chain"] as String
                     )
-                    
+
                     // Token Detail Tools
                     "getChainTokenInfo" -> tokenDetailTool.getChainTokenInfo(
                         args["chain"] as String
                     )
+
                     "getTokenInfo" -> tokenDetailTool.getTokenInfo(
                         chain = args["chain"] as String,
                         contractAddress = args["contractAddress"] as String
                     )
+
                     "getRangeCharts" -> tokenDetailTool.getRangeCharts(
                         args["chain"] as String
                     )
+
                     "getTokenRangeCharts" -> tokenDetailTool.getTokenRangeCharts(
                         chain = args["chain"] as String,
                         tokenAddress = args["tokenAddress"] as String
                     )
+
                     "getIntervalCharts" -> tokenDetailTool.getIntervalCharts(
                         args["chain"] as String
                     )
+
                     "getTokenIntervalCharts" -> tokenDetailTool.getTokenIntervalCharts(
                         chain = args["chain"] as String,
                         tokenAddress = args["tokenAddress"] as String
                     )
+
                     "getPriceChange" -> tokenDetailTool.getPriceChange(
                         args["chain"] as String
                     )
+
                     "getTokenPriceChange" -> tokenDetailTool.getTokenPriceChange(
                         chain = args["chain"] as String,
                         tokenAddress = args["tokenAddress"] as String
                     )
-                    
+
                     // Trace Tools
                     "getSyncedInterval" -> traceTool.getSyncedInterval(
                         args["chain"] as String
                     )
+
                     "getBlockTrace" -> traceTool.getBlockTrace(
                         chain = args["chain"] as String,
                         blockNumber = (args["blockNumber"] as Double).toLong()
                     )
+
                     "getBlockTraceTx" -> traceTool.getBlockTraceTx(
                         chain = args["chain"] as String,
                         blockNumber = (args["blockNumber"] as Double).toLong(),
                         txHash = args["txHash"] as String
                     )
+
                     "getBlockTraceWithOffset" -> traceTool.getBlockTraceWithOffset(
                         chain = args["chain"] as String,
                         blockNumber = (args["blockNumber"] as Double).toLong(),
                         offset = (args["offset"] as Double).toLong()
                     )
-                    
+
                     else -> error("Unknown function: $functionName")
                 }
             }
