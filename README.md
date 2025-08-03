@@ -257,6 +257,46 @@ curl http://localhost:3000/api/fusion/resolver/status
 curl -X POST http://localhost:3000/api/fusion/resolver/stop
 ```
 
+## 🌐 TEE Deployment Commands
+
+### **Production TEE Endpoints**
+
+**Health Check:**
+```bash
+# Check if the service is running
+curl https://c3a0385c6e74519c47613a009577382d3e5b77f2-3000.dstack-prod7.phala.network/
+```
+
+**Resolver Management:**
+```bash
+# Check resolver status
+curl https://c3a0385c6e74519c47613a009577382d3e5b77f2-3000.dstack-prod7.phala.network/api/fusion/resolver/status
+
+# Stop the Fusion resolver
+curl -X POST https://c3a0385c6e74519c47613a009577382d3e5b77f2-3000.dstack-prod7.phala.network/api/fusion/resolver/stop
+```
+
+**Order Operations:**
+```bash
+# Start resolver on BSC
+curl -X POST https://c3a0385c6e74519c47613a009577382d3e5b77f2-3000.dstack-prod7.phala.network/api/fusion/resolver/start \
+  -H "Content-Type: application/json" \
+  -d '{"network": "binance", "minProfitBps": 100}'
+
+# Create order on BSC
+curl -X POST https://c3a0385c6e74519c47613a009577382d3e5b77f2-3000.dstack-prod7.phala.network/api/fusion/resolver/create-order \
+  -H "Content-Type: application/json" \
+  -d '{
+    "params": {
+      "fromTokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "toTokenAddress": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+      "amount": "2000000000000000",
+      "walletAddress": "0x7D4CD93532c0469AE55Ad7138Df6f20D13F33E9f",
+      "source": "tee-test-fusion-solver"
+    }
+  }'
+```
+
 ## 📦 Deployment
 
 ### **1. Deploy with Shade Agent CLI**
