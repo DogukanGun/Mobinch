@@ -1,4 +1,4 @@
-# Shade Agent Template
+# Shade Agent + 1inch Fusion Extension
 
 > [!WARNING]  
 > This technology has not yet undergone a formal audit. Please conduct your own due diligence and exercise caution before integrating or relying on it in production environments.
