@@ -9,5 +9,6 @@ enum class BottomNavIcon(
     var destination: Destination
 ) {
     Home(R.drawable.baseline_home_filled, Destination.HomeScreen),
-    AIView(R.drawable._inch_logo, Destination.AIView)
+    AIView(R.drawable._inch_logo, Destination.AIView),
+    NearTrade(R.drawable.near_protocol_near_seeklogo, Destination.NearSwapScreen)
 }

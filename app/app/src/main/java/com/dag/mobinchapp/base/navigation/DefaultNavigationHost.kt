@@ -12,6 +12,7 @@ import com.dag.mobinchapp.features.aibot.AiBotScreen
 import com.dag.mobinchapp.features.login.presentation.LoginView
 import com.dag.mobinchapp.features.splash.SplashView
 import com.dag.mobinchapp.features.home.presentation.HomeView
+import com.dag.mobinchapp.features.nearswap.NearSwapScreen
 
 @Composable
 fun DefaultNavigationHost(
@@ -60,6 +61,12 @@ fun DefaultNavigationHost(
 
             composableWithAnimations<Destination.AIView> {
                 AiBotScreen()
+            }
+
+            composableWithAnimations<Destination.NearSwapScreen> {
+                NearSwapScreen(
+                    navController = navController
+                )
             }
 
         }

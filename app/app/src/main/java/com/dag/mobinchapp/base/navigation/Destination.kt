@@ -15,6 +15,9 @@ sealed interface Destination {
     @Serializable
     data object AIView: Destination
 
+    @Serializable
+    data object NearSwapScreen: Destination
+
     companion object {
         val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash, LoginScreen)
     }
