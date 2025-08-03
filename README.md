@@ -40,16 +40,30 @@ User Creates Order → Quote Generation → Order Submission → Status Tracking
 ### **1. Install Dependencies**
 ```bash
 npm install
+
+# Install the NEAR CLI
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/near-cli-rs/releases/latest/download/near-cli-rs-installer.sh | sh
+
+# Install the Shade Agent CLI
+npm i -g @neardefi/shade-agent-cli
 ```
 
-### **2. Configure Environment**
+### **2. Create NEAR Testnet Account**
+```bash
+# Create a NEAR testnet account and record the account name and seed phrase
+near account create-account sponsor-by-faucet-service example-name.testnet autogenerate-new-keypair print-to-terminal network-config testnet create
+```
+
+**Important**: Save the account name and seed phrase - you'll need them for the environment configuration.
+
+### **3. Configure Environment**
 ```bash
 cp .env.development.local.example .env.development.local
 ```
 
 Edit `.env.development.local`:
 ```env
-# NEAR Configuration
+# NEAR Configuration (from account creation)
 NEAR_ACCOUNT_ID=your-near-account.testnet
 NEAR_SEED_PHRASE=your-seed-phrase
 NEXT_PUBLIC_contractId=your-contract-id
@@ -57,19 +71,18 @@ NEXT_PUBLIC_contractId=your-contract-id
 # 1inch Fusion Configuration
 ONEINCH_API_KEY=your-1inch-api-key
 ETH_PRIVATE_KEY=your-private-key
-NEAR_DERIVED_ETH_ADDRESS_LOCAL=0x6102674b4ce94f4Ccbf55611871921A10bbC8Ba6
 
 # RPC URLs
 ETH_RPC_URL=https://eth-mainnet.public.blastapi.io
 BSC_RPC_URL=https://bsc-dataseed.binance.org
 ```
 
-### **3. Start the Agent**
+### **4. Start the Agent**
 ```bash
 npm run dev
 ```
 
-### **4. Start Fusion Resolver**
+### **5. Start Fusion Resolver**
 ```bash
 curl -X POST http://localhost:3000/api/fusion/resolver/start \
   -H "Content-Type: application/json" \
@@ -244,7 +257,7 @@ curl http://localhost:3000/api/fusion/resolver/status
 curl -X POST http://localhost:3000/api/fusion/resolver/stop
 ```
 
-## �� Deployment
+## 📦 Deployment
 
 ### **1. Deploy with Shade Agent CLI**
 
